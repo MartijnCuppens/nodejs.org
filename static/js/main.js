@@ -55,7 +55,7 @@
   var contributorUsername = thankingContributor.querySelector('#contributor-username')
   var contributorCommits = thankingContributor.querySelector('#contributor-commits')
 
-  if (!contributorAvatar) {
+  if (!thankingContributor) {
     return
   }
 

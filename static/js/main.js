@@ -54,36 +54,38 @@
   var contributorUsername = document.getElementById('contributor-username')
   var contributorCommits = document.getElementById('contributor-commits')
 
-  if (contributorAvatar) {
-    var xhr = new window.XMLHttpRequest()
-    xhr.responseType = 'json'
+  if (!contributorAvatar) {
+    return
+  }
 
-    xhr.open('GET', 'https://api.github.com/repos/nodejs/node/contributors?per_page=1')
-    xhr.send()
-    xhr.onload = function () {
-      if (xhr.status !== 200) {
-        handleRequestError()
-      } else {
-        // Get Headers Links last page to generate a random contributor
-        var links = linkParser(xhr.getResponseHeader('Link'))
-        var randomPage = randomInt(links.last.page) + 1
+  var xhr = new window.XMLHttpRequest()
+  xhr.responseType = 'json'
 
-        // Fetch the contributor
-        xhr.open('GET', 'https://api.github.com/repos/nodejs/node/contributors?per_page=1&page=' + randomPage)
-        xhr.send()
-        xhr.onload = function () {
-          if (xhr.status !== 200) {
-            handleRequestError()
-          } else {
-            var contributor = xhr.response[0]
-            // Set new values
-            contributorAvatar.parentNode.classList.add('active')
-            contributorAvatar.src = contributor.avatar_url
-            contributorUsername.innerText = contributor.login
-            contributorUsername.href = contributor.html_url
-            contributorCommits.innerText = contributor.contributions
-            contributorCommits.innerText = contributor.contributions + ' contributions'
-          }
+  xhr.open('GET', 'https://api.github.com/repos/nodejs/node/contributors?per_page=1')
+  xhr.send()
+  xhr.onload = function () {
+    if (xhr.status !== 200) {
+      handleRequestError()
+    } else {
+      // Get Headers Links last page to generate a random contributor
+      var links = linkParser(xhr.getResponseHeader('Link'))
+      var randomPage = randomInt(links.last.page) + 1
+
+      // Fetch the contributor
+      xhr.open('GET', 'https://api.github.com/repos/nodejs/node/contributors?per_page=1&page=' + randomPage)
+      xhr.send()
+      xhr.onload = function () {
+        if (xhr.status !== 200) {
+          handleRequestError()
+        } else {
+          var contributor = xhr.response[0]
+          // Set new values
+          contributorAvatar.parentNode.classList.add('active')
+          contributorAvatar.src = contributor.avatar_url
+          contributorUsername.innerText = contributor.login
+          contributorUsername.href = contributor.html_url
+          contributorCommits.innerText = contributor.contributions
+          contributorCommits.innerText = contributor.contributions + ' contributions'
         }
       }
     }

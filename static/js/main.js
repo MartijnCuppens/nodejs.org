@@ -50,9 +50,10 @@
 })()
 
 ;(function () {
-  var contributorAvatar = document.getElementById('contributor-avatar')
-  var contributorUsername = document.getElementById('contributor-username')
-  var contributorCommits = document.getElementById('contributor-commits')
+  var thankingContributor = document.querySelector('.thanking-contributor')
+  var contributorAvatar = thankingContributor.querySelector('#contributor-avatar')
+  var contributorUsername = thankingContributor.querySelector('#contributor-username')
+  var contributorCommits = thankingContributor.querySelector('#contributor-commits')
 
   if (!contributorAvatar) {
     return
@@ -65,34 +66,31 @@
   xhr.send()
   xhr.onload = function () {
     if (xhr.status !== 200) {
-      handleRequestError()
-    } else {
-      // Get Headers Links last page to generate a random contributor
-      var links = linkParser(xhr.getResponseHeader('Link'))
-      var randomPage = randomInt(links.last.page) + 1
-
-      // Fetch the contributor
-      xhr.open('GET', 'https://api.github.com/repos/nodejs/node/contributors?per_page=1&page=' + randomPage)
-      xhr.send()
-      xhr.onload = function () {
-        if (xhr.status !== 200) {
-          handleRequestError()
-        } else {
-          var contributor = xhr.response[0]
-          // Set new values
-          contributorAvatar.parentNode.classList.add('active')
-          contributorAvatar.src = contributor.avatar_url
-          contributorUsername.innerText = contributor.login
-          contributorUsername.href = contributor.html_url
-          contributorCommits.innerText = contributor.contributions
-          contributorCommits.innerText = contributor.contributions + ' contributions'
-        }
-      }
+      return
     }
-  }
 
-  function handleRequestError () {
-    contributorAvatar.parentNode.remove()
+    // Get Headers Links last page to generate a random contributor
+    var links = linkParser(xhr.getResponseHeader('Link'))
+    var randomPage = randomInt(links.last.page) + 1
+
+    // Fetch the contributor
+    xhr.open('GET', 'https://api.github.com/repos/nodejs/node/contributors?per_page=1&page=' + randomPage)
+    xhr.send()
+    xhr.onload = function () {
+      if (xhr.status !== 200) {
+        return
+      }
+
+      var contributor = xhr.response[0]
+      // Set new values
+      thankingContributor.classList.remove('hidden')
+      contributorAvatar.parentNode.classList.add('active')
+      contributorAvatar.src = contributor.avatar_url
+      contributorUsername.innerText = contributor.login
+      contributorUsername.href = contributor.html_url
+      contributorCommits.innerText = contributor.contributions
+      contributorCommits.innerText = contributor.contributions + ' contributions'
+    }
   }
 
   function linkParser (linkHeader) {

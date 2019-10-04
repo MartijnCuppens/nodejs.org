@@ -23,6 +23,10 @@
 }
 
 .thanking-contributor {
+  &.hidden {
+    display: none;
+  }
+
   max-width: 300px;
   display: flex;
   align-items: center;

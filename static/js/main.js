@@ -71,7 +71,7 @@
 
     // Get Headers Links last page to generate a random contributor
     var links = linkParser(xhr.getResponseHeader('Link'))
-    var randomPage = randomInt(links.last.page) + 1
+    var randomPage = Math.floor(Math.random() * Math.floor(parseInt(links.last.page))) + 1
 
     // Fetch the contributor
     xhr.open('GET', 'https://api.github.com/repos/nodejs/node/contributors?per_page=1&page=' + randomPage)
@@ -106,10 +106,6 @@
     }
 
     return object
-  }
-
-  function randomInt (max) {
-    return Math.floor(Math.random() * Math.floor(parseInt(max)))
   }
 })()
 

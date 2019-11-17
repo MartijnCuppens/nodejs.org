@@ -80,6 +80,35 @@
   }
 
   function fetchRandomContributor () {
+    var maxContributors
+    var fetchDate
+    var needToRefetch = false
+
+    if (window.localStorage) {
+      maxContributors = window.localStorage.getItem('max_contributors')
+      fetchDate = parseInt(window.localStorage.getItem('fetch_date'), 10)
+    }
+
+    // If fetch date is a month old (2592000000 ms === 30 days)
+    if (Date.now() - fetchDate >= 2592000000) {
+      needToRefetch = true
+    }
+
+    // If localStorage and data is less than 1 month old, fetch 1 time
+    if (maxContributors && !needToRefetch) {
+      getContributor(Math.floor(Math.random() * Math.floor(parseInt(maxContributors))) + 1)
+    } else {
+      getMaxContributors(function (randomPage, lastPage) {
+        getContributor(randomPage)
+
+        if (window.localStorage) {
+          window.localStorage.setItem('max_contributors', lastPage)
+        }
+      })
+    }
+  }
+
+  function getMaxContributors (callback) {
     var xhr = new window.XMLHttpRequest()
     xhr.responseType = 'json'
 
@@ -94,23 +123,33 @@
       var links = linkParser(xhr.getResponseHeader('Link'))
       var randomPage = Math.floor(Math.random() * Math.floor(parseInt(links.last.page))) + 1
 
-      // Fetch the contributor
-      xhr.open('GET', 'https://api.github.com/repos/nodejs/node/contributors?per_page=1&page=' + randomPage)
-      xhr.send()
-      xhr.onload = function () {
-        if (xhr.status !== 200) {
-          return
-        }
-
-        var contributor = xhr.response[0]
-        // Set new values
-        thankingContributor.classList.remove('hidden')
-        contributorAvatar.src = contributor.avatar_url
-        contributorUsername.innerText = contributor.login
-        contributorUsername.href = contributor.html_url
-        contributorCommits.innerText = contributor.contributions
-        contributorCommits.innerText = contributor.contributions + ' contributions'
+      if (window.localStorage) {
+        window.localStorage.setItem('fetch_date', Date.now())
       }
+
+      callback(randomPage, links.last.page)
+    }
+  }
+
+  function getContributor (randomPage) {
+    var xhr = new window.XMLHttpRequest()
+    xhr.responseType = 'json'
+
+    xhr.open('GET', 'https://api.github.com/repos/nodejs/node/contributors?per_page=1&page=' + randomPage)
+    xhr.send()
+    xhr.onload = function () {
+      if (xhr.status !== 200) {
+        return
+      }
+
+      var contributor = xhr.response[0]
+      // Set new values
+      thankingContributor.classList.remove('hidden')
+      contributorAvatar.src = contributor.avatar_url
+      contributorUsername.innerText = contributor.login
+      contributorUsername.href = contributor.html_url
+      contributorCommits.innerText = contributor.contributions
+      contributorCommits.innerText = contributor.contributions + ' contributions'
     }
   }
 

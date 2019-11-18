@@ -50,14 +50,15 @@
 })()
 
 ;(function () {
-  var thankingContributor = document.querySelector('.thanking-contributor')
-  var contributorAvatar = thankingContributor.querySelector('#contributor-avatar')
-  var contributorUsername = thankingContributor.querySelector('#contributor-username')
-  var contributorCommits = thankingContributor.querySelector('#contributor-commits')
+  var thankingContributor = document.querySelector('.contributor-card')
 
   if (!thankingContributor) {
     return
   }
+
+  var contributorAvatar = thankingContributor.querySelector('#contributor-avatar')
+  var contributorUsername = thankingContributor.querySelector('#contributor-username')
+  var contributorContributions = thankingContributor.querySelector('#contributor-contributions')
 
   if (window.IntersectionObserver) {
     var observer = new window.IntersectionObserver(function (entries) {
@@ -146,10 +147,12 @@
       // Set new values
       thankingContributor.classList.remove('hidden')
       contributorAvatar.src = contributor.avatar_url
+      contributorAvatar.parentElement.href = contributor.html_url
       contributorUsername.innerText = contributor.login
       contributorUsername.href = contributor.html_url
-      contributorCommits.innerText = contributor.contributions
-      contributorCommits.innerText = contributor.contributions + ' contributions'
+      contributorContributions.innerText = contributor.contributions
+      contributorContributions.innerText = contributor.contributions + ' contributions'
+      contributorContributions.parentElement.href = 'https://github.com/nodejs/node/commits?author=' + contributor.login
     }
   }
 

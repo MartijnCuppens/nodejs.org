@@ -59,6 +59,7 @@
   var contributorAvatar = thankingContributor.querySelector('#contributor-avatar')
   var contributorUsername = thankingContributor.querySelector('#contributor-username')
   var contributorContributions = thankingContributor.querySelector('#contributor-contributions')
+  var loadingSpinner = thankingContributor.querySelector('.spinner')
 
   if (window.IntersectionObserver) {
     var observer = new window.IntersectionObserver(function (entries) {
@@ -122,7 +123,7 @@
 
       // Get Headers Links last page to generate a random contributor
       var links = linkParser(xhr.getResponseHeader('Link'))
-      var randomPage = Math.floor(Math.random() * Math.floor(parseInt(links.last.page))) + 1
+      var randomPage = Math.floor(Math.random() * Math.floor(parseInt(links.last.page, 10))) + 1
 
       if (window.localStorage) {
         window.localStorage.setItem('fetch_date', Date.now())
@@ -144,8 +145,11 @@
       }
 
       var contributor = xhr.response[0]
+
+      // Remove loading spinner and show avatar
+      loadingSpinner.remove()
+      contributorAvatar.classList.remove('hidden')
       // Set new values
-      thankingContributor.classList.remove('hidden')
       contributorAvatar.src = contributor.avatar_url
       contributorAvatar.parentElement.href = contributor.html_url
       contributorUsername.innerText = contributor.login

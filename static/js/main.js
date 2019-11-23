@@ -118,7 +118,7 @@
     xhr.send()
     xhr.onload = function () {
       if (xhr.status !== 200) {
-        return
+        return thankingContributor.remove()
       }
 
       // Get Headers Links last page to generate a random contributor
@@ -141,7 +141,7 @@
     xhr.send()
     xhr.onload = function () {
       if (xhr.status !== 200) {
-        return
+        return thankingContributor.remove()
       }
 
       var contributor = xhr.response[0]

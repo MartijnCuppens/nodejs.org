@@ -50,16 +50,16 @@
 })()
 
 ;(function () {
-  var thankingContributor = document.querySelector('.contributor-card')
+  var contributorCard = document.querySelector('.contributor-card')
 
-  if (!thankingContributor) {
+  if (!contributorCard) {
     return
   }
 
-  var contributorAvatar = thankingContributor.querySelector('#contributor-avatar')
-  var contributorUsername = thankingContributor.querySelector('#contributor-username')
-  var contributorContributions = thankingContributor.querySelector('#contributor-contributions')
-  var loadingSpinner = thankingContributor.querySelector('.spinner')
+  var contributorAvatar = contributorCard.querySelector('#contributor-avatar')
+  var contributorUsername = contributorCard.querySelector('#contributor-username')
+  var contributorContributions = contributorCard.querySelector('#contributor-contributions')
+  var loadingSpinner = contributorCard.querySelector('.spinner')
 
   if (window.IntersectionObserver) {
     var observer = new window.IntersectionObserver(function (entries) {
@@ -118,7 +118,7 @@
     xhr.send()
     xhr.onload = function () {
       if (xhr.status !== 200) {
-        return thankingContributor.remove()
+        return contributorCard.remove()
       }
 
       // Get Headers Links last page to generate a random contributor
@@ -141,7 +141,7 @@
     xhr.send()
     xhr.onload = function () {
       if (xhr.status !== 200) {
-        return thankingContributor.remove()
+        return contributorCard.remove()
       }
 
       var contributor = xhr.response[0]

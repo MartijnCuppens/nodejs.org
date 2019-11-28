@@ -154,7 +154,6 @@
       contributorAvatar.parentElement.href = contributor.html_url
       contributorUsername.innerText = contributor.login
       contributorUsername.href = contributor.html_url
-      contributorContributions.innerText = contributor.contributions
       contributorContributions.innerText = contributor.contributions + ' contributions'
       contributorContributions.parentElement.href = 'https://github.com/nodejs/node/commits?author=' + contributor.login
     })

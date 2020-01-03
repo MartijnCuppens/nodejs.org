@@ -59,7 +59,7 @@
   var contributorAvatar = contributorCard.querySelector('#contributor-avatar')
   var contributorUsername = contributorCard.querySelector('#contributor-username')
   var contributorContributions = contributorCard.querySelector('#contributor-contributions')
-  var loadingSpinner = contributorCard.querySelector('.spinner')
+  var loadingSpinner = contributorCard.querySelector('.spinner-border')
 
   if (window.IntersectionObserver) {
     var observer = new window.IntersectionObserver(function (entries) {
